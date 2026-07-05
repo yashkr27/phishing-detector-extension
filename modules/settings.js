@@ -2,7 +2,7 @@
 // Centralised settings access — reads from chrome.storage.sync
 
 export const DEFAULTS = {
-  apiUrl:    "http://127.0.0.1:8000",
+  apiUrl:    "https://phishing-detection-api-n362.onrender.com",
   threshold: 0.50,
   autoScan:  true,
 };

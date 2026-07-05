@@ -9,7 +9,7 @@ import { applyBadgeFromResult, setBadgeLoading,
 
 // ── Core: analyse a URL for a given tab ──────────────────
 
-async function analyzeUrl(url, tabId, forceRefresh = false) {
+async function analyzeUrl(url, tabId, forceRefresh = false, useCache = true) {
   const { apiUrl, threshold, autoScan } = await getSettings();
 
   if (!autoScan && !forceRefresh) return;
@@ -19,8 +19,9 @@ async function analyzeUrl(url, tabId, forceRefresh = false) {
     return;
   }
 
-  // Serve from cache unless a rescan was explicitly requested
-  if (!forceRefresh) {
+  // Only serve from cache when explicitly allowed (e.g. popup GET_RESULT)
+  // Tab navigations always fetch fresh from BE
+  if (useCache && !forceRefresh) {
     const cached = await getCache(url);
     if (cached) {
       applyBadgeFromResult(tabId, cached);
@@ -77,13 +78,13 @@ function broadcast(tabId, message) {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete" && tab.url) {
-    analyzeUrl(tab.url, tabId);
+    analyzeUrl(tab.url, tabId, false, false); // always fresh BE call on page load
   }
 });
 
 chrome.tabs.onActivated.addListener(async ({ tabId }) => {
   const tab = await chrome.tabs.get(tabId);
-  if (tab?.url) analyzeUrl(tab.url, tabId);
+  if (tab?.url) analyzeUrl(tab.url, tabId, false, false); // always fresh on tab switch
 });
 
 // ── Message handler (from popup) ──────────────────────────
