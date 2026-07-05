@@ -10,8 +10,10 @@ from app.predict import predict_url
 app = FastAPI(title="Phishing Detection API")
 
 # ----------------------------
-# CORS (Development: Allow All)
-#to connect FE and BE
+# CORS
+# allow_origins=["*"] is intentional for a local-only extension backend.
+# If you ever expose this server publicly, replace "*" with the exact
+# chrome-extension://... origin of your built extension.
 # ----------------------------
 app.add_middleware(
     CORSMiddleware,
@@ -51,12 +53,12 @@ def predict(req: URLRequest):
 
 # ----------------------------
 # Debug endpoint (temp)
+# Usage: GET /debug/scaler?url=https://example.com
 # ----------------------------
 @app.get("/debug/scaler")
-def debug_scaler():
+def debug_scaler(url: str = "https://www.example.com"):
     from app.model_loader import scaler, model
     from app.feature_extractor import extract_features
-    import numpy as np
     result = {}
     if hasattr(scaler, 'feature_names_in_'):
         result["scaler_feature_names"] = list(scaler.feature_names_in_)
@@ -64,9 +66,9 @@ def debug_scaler():
     result["mean"] = [round(float(x), 4) for x in scaler.mean_]
     result["scale"] = [round(float(x), 4) for x in scaler.scale_]
 
-    # Also test feature extraction for google.com
-    features = extract_features("https://www.google.com")
-    result["google_features"] = [float(x) for x in features[0]]
-    result["google_scaled"] = [round(float(x), 4) for x in scaler.transform(features)[0]]
+    features = extract_features(url)
+    result["test_url"] = url
+    result["raw_features"] = [float(x) for x in features[0]]
+    result["scaled_features"] = [round(float(x), 4) for x in scaler.transform(features)[0]]
 
     return result

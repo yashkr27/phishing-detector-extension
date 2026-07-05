@@ -1,8 +1,11 @@
 import joblib
+from pathlib import Path
 
-#to load model files
-MODEL_PATH = "models/xgboost_phishing_model.joblib"
-SCALER_PATH = "models/phishing_scaler.joblib"
+# Resolve paths relative to this file so the server works regardless of
+# which directory it is launched from.
+_BASE_DIR   = Path(__file__).resolve().parent.parent
+MODEL_PATH  = _BASE_DIR / "models" / "xgboost_phishing_model.joblib"
+SCALER_PATH = _BASE_DIR / "models" / "phishing_scaler.joblib"
 
-model = joblib.load(MODEL_PATH)
+model  = joblib.load(MODEL_PATH)
 scaler = joblib.load(SCALER_PATH)
