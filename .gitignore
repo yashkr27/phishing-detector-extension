@@ -11,6 +11,10 @@ Thumbs.db
 dist/
 build/
 node_modules/
+__pycache__/
+.pyc*
+
+
 
 # Env files
 .env
