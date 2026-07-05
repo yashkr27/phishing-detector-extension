@@ -21,7 +21,8 @@ export function isScannableUrl(url) {
  */
 export async function fetchPrediction(url, apiBaseUrl) {
   try {
-    const response = await fetch(`${apiBaseUrl}/predict`, {
+    const base = apiBaseUrl.replace(/\/+$/, ""); // strip trailing slash(es)
+    const response = await fetch(`${base}/predict`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url }),
@@ -58,7 +59,8 @@ export async function fetchPrediction(url, apiBaseUrl) {
  */
 export async function pingApi(apiBaseUrl) {
   try {
-    const res = await fetch(`${apiBaseUrl}/`, { method: "GET" });
+    const base = apiBaseUrl.replace(/\/+$/, "");
+    const res = await fetch(`${base}/`, { method: "GET" });
     return res.ok;
   } catch {
     return false;

@@ -35,9 +35,11 @@ async function analyzeUrl(url, tabId, forceRefresh = false) {
 
   const result = await fetchPrediction(url, apiUrl);
 
+  // 🔍 DEBUG — remove after fixing
+  console.log("[PhishGuard] Raw API result:", JSON.stringify(result));
+  console.log("[PhishGuard] label:", result.label, "| confidence:", result.confidence);
+
   // Trust the API's label directly — no local threshold override.
-  // The threshold is only used below to decide whether to show the
-  // in-page warning overlay (a UX decision, not a verdict change).
 
   // Persist to session cache (only if not an error)
   if (!result.error) {
@@ -49,6 +51,7 @@ async function analyzeUrl(url, tabId, forceRefresh = false) {
 
   // Notify popup
   broadcast(tabId, { type: "SCAN_RESULT", result });
+  console.log("[PhishGuard] Broadcasted SCAN_RESULT:", result.label);
 
   // Trigger in-page warning overlay for high-confidence phishing
   if (result.label === "phishing" && result.confidence >= threshold && !result.error) {
