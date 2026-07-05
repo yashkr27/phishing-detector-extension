@@ -35,14 +35,9 @@ async function analyzeUrl(url, tabId, forceRefresh = false) {
 
   const result = await fetchPrediction(url, apiUrl);
 
-  // ── Re-evaluate label against the user-configured threshold ──────────
-  // The API returns a label based on the ML decision boundary (0.5).
-  // We override it here so the badge, popup, and overlay all use the
-  // same threshold the user configured — instead of two different cutoffs
-  // producing an inconsistent UI (e.g. red badge but no overlay warning).
-  if (!result.error) {
-    result.label = result.confidence >= threshold ? "phishing" : "legitimate";
-  }
+  // Trust the API's label directly — no local threshold override.
+  // The threshold is only used below to decide whether to show the
+  // in-page warning overlay (a UX decision, not a verdict change).
 
   // Persist to session cache (only if not an error)
   if (!result.error) {
