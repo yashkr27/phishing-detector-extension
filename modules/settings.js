@@ -3,7 +3,7 @@
 
 export const DEFAULTS = {
   apiUrl:    "http://127.0.0.1:8000",
-  threshold: 0.80,
+  threshold: 0.50,
   autoScan:  true,
 };
 
