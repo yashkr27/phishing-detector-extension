@@ -9,11 +9,22 @@ export const DEFAULTS = {
 
 /**
  * Returns current settings merged with defaults.
+ * Automatically migrates old localhost URLs to the deployed API.
  * @returns {Promise<{apiUrl: string, threshold: number, autoScan: boolean}>}
  */
 export function getSettings() {
   return new Promise((resolve) =>
-    chrome.storage.sync.get(DEFAULTS, resolve)
+    chrome.storage.sync.get(DEFAULTS, async (settings) => {
+      // Migrate: if stored URL is a localhost URL, replace with deployed API
+      if (
+        settings.apiUrl.startsWith("http://127.0.0.1") ||
+        settings.apiUrl.startsWith("http://localhost")
+      ) {
+        settings.apiUrl = DEFAULTS.apiUrl;
+        await new Promise((r) => chrome.storage.sync.set({ apiUrl: DEFAULTS.apiUrl }, r));
+      }
+      resolve(settings);
+    })
   );
 }
 
