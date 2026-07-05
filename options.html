@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PhishGuard – Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0f1a;
+      --surface: #111827;
+      --card:    rgba(255,255,255,0.04);
+      --border:  rgba(255,255,255,0.1);
+      --text:    #f1f5f9;
+      --muted:   #64748b;
+      --secondary: #94a3b8;
+      --accent:  #6366f1;
+      --safe:    #10b981;
+      --radius:  12px;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+
+    .header-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a5b4fc;
+    }
+
+    .header-icon svg { width: 22px; height: 22px; }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f1f5f9, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field:last-child { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .field-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', monospace;
+      font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus {
+      border-color: rgba(99,102,241,0.5);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
+
+    /* Slider */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      border: 2px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 8px rgba(99,102,241,0.5);
+      transition: transform 0.15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .slider-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 38px;
+      text-align: right;
+    }
+
+    /* Toggle */
+    .toggle-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .toggle-label { flex: 1; }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--muted);
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: var(--safe);
+      border-color: var(--safe);
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(20px);
+      background: white;
+    }
+
+    /* Save button */
+    .save-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .btn-save {
+      padding: 10px 28px;
+      background: var(--accent);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-save:active { transform: translateY(0); }
+
+    .save-msg {
+      font-size: 13px;
+      color: var(--safe);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-weight: 500;
+    }
+
+    .save-msg.visible { opacity: 1; }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 24px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-header">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L3 6v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V6L12 2z"/>
+        </svg>
+      </div>
+      <div>
+        <h1>PhishGuard Settings</h1>
+        <p class="subtitle">Configure your phishing detection preferences</p>
+      </div>
+    </div>
+
+    <!-- API Configuration -->
+    <div class="card">
+      <p class="card-title">API Configuration</p>
+      <div class="field">
+        <label for="apiUrl">API Base URL</label>
+        <input type="url" id="apiUrl" placeholder="http://127.0.0.1:8000" />
+        <p class="field-desc">URL where your Phishing Detection FastAPI is running. Default: <code>http://127.0.0.1:8000</code></p>
+      </div>
+    </div>
+
+    <!-- Detection Settings -->
+    <div class="card">
+      <p class="card-title">Detection Settings</p>
+
+      <div class="field">
+        <label>Warning Overlay Threshold</label>
+        <div class="slider-wrap">
+          <input type="range" id="threshold" min="50" max="99" step="1" />
+          <span class="slider-val" id="thresholdVal">80%</span>
+        </div>
+        <p class="field-desc">The confidence level (%) above which a red warning banner appears on the page. Lower = more sensitive.</p>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <label for="autoScanToggle" style="margin-bottom:0">Auto-Scan</label>
+            <p class="field-desc" style="margin-top:4px">Automatically analyze every URL you navigate to. Disable to scan manually from the popup.</p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="autoScanToggle" checked />
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div class="save-row">
+      <span class="save-msg" id="saveMsg">✓ Settings saved!</span>
+      <button class="btn-save" id="saveBtn">Save Settings</button>
+    </div>
+
+    <p class="footer-note">
+      PhishGuard v1.0.0 · Powered by XGBoost + FastAPI<br/>
+      Phishing data: UCI Phishing Websites Dataset
+    </p>
+  </div>
+
+  <script src="options.js" type="module"></script>
+</body>
+</html>
