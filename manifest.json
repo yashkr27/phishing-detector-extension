@@ -41,6 +41,7 @@
 
   "host_permissions": [
     "http://127.0.0.1:8000/*",
+    "https://phishing-detection-api-n362.onrender.com/*",
     "https://*/*",
     "http://*/*"
   ],
@@ -48,6 +49,6 @@
   "options_page": "options.html",
 
   "content_security_policy": {
-    "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src http://127.0.0.1:8000 https://*; img-src 'self' data:"
+    "extension_pages": "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src http://127.0.0.1:8000 https://phishing-detection-api-n362.onrender.com https://*; img-src 'self' data:"
   }
 }
