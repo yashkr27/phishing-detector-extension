@@ -1,28 +1,27 @@
 // modules/settings.js
 // Centralised settings access — reads from chrome.storage.sync
 
+/**
+ * The ONLY backend URL the extension is allowed to contact.
+ * This is intentionally NOT user-configurable to prevent request hijacking.
+ */
+export const API_URL = "https://phishing-detection-api-n362.onrender.com";
+
 export const DEFAULTS = {
-  apiUrl:    "https://phishing-detection-api-n362.onrender.com",
   threshold: 0.50,
   autoScan:  true,
 };
 
 /**
  * Returns current settings merged with defaults.
- * Automatically migrates old localhost URLs to the deployed API.
+ * The apiUrl is always the hardcoded deployed backend — never user-supplied.
  * @returns {Promise<{apiUrl: string, threshold: number, autoScan: boolean}>}
  */
 export function getSettings() {
   return new Promise((resolve) =>
-    chrome.storage.sync.get(DEFAULTS, async (settings) => {
-      // Migrate: if stored URL is a localhost URL, replace with deployed API
-      if (
-        settings.apiUrl.startsWith("http://127.0.0.1") ||
-        settings.apiUrl.startsWith("http://localhost")
-      ) {
-        settings.apiUrl = DEFAULTS.apiUrl;
-        await new Promise((r) => chrome.storage.sync.set({ apiUrl: DEFAULTS.apiUrl }, r));
-      }
+    chrome.storage.sync.get(DEFAULTS, (settings) => {
+      // Always enforce the hardcoded API URL
+      settings.apiUrl = API_URL;
       resolve(settings);
     })
   );
